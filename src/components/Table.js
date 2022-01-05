@@ -27,7 +27,7 @@ const Table = ({ page, routes, allRoutes, columns, handleFormat, handlePageChang
 
   return (
     <div>
-      <table>
+      <table className='routes-table'>
         <thead>
           <tr>
             {
@@ -38,16 +38,16 @@ const Table = ({ page, routes, allRoutes, columns, handleFormat, handlePageChang
           </tr>
         </thead>
         <tbody>
-            {
-              routes.map((route, i) => (
-                <TableRow
+          {
+            routes.map((route, i) => (
+              <TableRow
                 key={i}
                 route={route}
                 columns={columns}
                 handleFormat={handleFormat}
-                />
-                ))
-              }
+              />
+            ))
+          }
         </tbody>
       </table>
       <p>

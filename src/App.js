@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import Table from './components/Table';
 import RouteFilter from './components/RouteFilter';
+import Map from './components/Map'
 import Data, { getAirlineById, getAirportByCode } from './data.js';
 
 
@@ -15,7 +16,7 @@ const App = () => {
     if (property === 'airline') {
       return getAirlineById(value);
     } else if (property === 'src' || property === 'dest') {
-      return getAirportByCode(value);
+      return getAirportByCode(value).name;
     } else {
       return '';
     }
@@ -37,8 +38,8 @@ const App = () => {
   };
 
   const filterAirports = (event) => {
-    const airportInput = String(event.target.value);
-    const airportToFilter = airportInput === 'All Airports' ? 'all' : airportInput
+    const airportInput = event.target.value || event.target.dataset.code;
+    const airportToFilter = String(airportInput) === 'All Airports' ? 'all' : airportInput
     filterResults(airline, airportToFilter);
     setAirport(airportToFilter);
   };
@@ -101,6 +102,13 @@ const App = () => {
       <header className="header">
         <h1 className="title">Airline Routes</h1>
       </header>
+      <section>
+        <Map
+          routes={routesToShow}
+          getAirport={getAirportByCode}
+          onMapClick={filterAirports}
+        />
+      </section>
       <section>
         <RouteFilter
           handleAirlineFilter={filterAirlines}

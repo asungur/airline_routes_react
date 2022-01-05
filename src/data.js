@@ -1400,7 +1400,7 @@ export const getAirlineById = (id) => {
 };
 
 export const getAirportByCode = (code) => {
-  return airports.find(airport => airport.code === code).name;
+  return airports.find(airport => airport.code === code);
 };
 
 const airlines = allAirlines.map(airline => Object.assign({}, airline, { "disabled": false }));

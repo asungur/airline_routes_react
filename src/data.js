@@ -851,7 +851,7 @@ const routes = [
   {"airline":4951,"src":"NBO","dest":"IST"},
 ];
 
-const airlines = [
+const allAirlines = [
   {"id":24,"name":"American Airlines"},
   {"id":130,"name":"Aeroflot Russian Airlines"},
   {"id":218,"name":"Air India Limited"},
@@ -871,7 +871,7 @@ const airlines = [
   {"id":4951,"name":"Turkish Airlines"},
 ];
 
-const airports = [
+const allAirports = [
   {"code":"YEG","name":"Edmonton International Airport","lat":53.309700012200004,"long":-113.580001831},
   {"code":"YHZ","name":"Halifax / Stanfield International Airport","lat":44.8807983398,"long":-63.5085983276},
   {"code":"YMM","name":"Fort McMurray Airport","lat":56.653301239,"long":-111.222000122},
@@ -1402,6 +1402,9 @@ export const getAirlineById = (id) => {
 export const getAirportByCode = (code) => {
   return airports.find(airport => airport.code === code).name;
 };
+
+const airlines = allAirlines.map(airline => Object.assign({}, airline, { "disabled": false }));
+const airports = allAirports.map(airport => Object.assign({}, airport, { "disabled": false }));
 
 const Data = { routes, airlines, airports }
 

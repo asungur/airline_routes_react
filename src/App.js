@@ -24,6 +24,8 @@ const App = () => {
   const [page, setPage] = useState(1);
   const [airport, setAirport] = useState('all');
   const [airline, setAirline] = useState('all');
+  const [airports, setAirports] = useState(Data.airports);
+  const [airlines, setAirlines] = useState(Data.airlines);
   const [routesToShow, setRoutesToShow] = useState(Data.routes);
   const [paginatedRoutes, setPaginatedRoutes] = useState(routesToShow.slice(0, 24));
 
@@ -35,20 +37,44 @@ const App = () => {
   };
 
   const filterAirports = (event) => {
-    const airportInput = event.target.value;
-    const airportToFilter = !airportInput ? 'all' : airportInput
+    const airportInput = String(event.target.value);
+    const airportToFilter = airportInput === 'All Airports' ? 'all' : airportInput
     filterResults(airline, airportToFilter);
     setAirport(airportToFilter);
   };
 
+  const clearFilters = () => {
+    setAirline('all');
+    setAirport('all');
+    filterResults('all', 'all');
+    setAirlines(Data.airlines);
+    setAirports(Data.airports);
+  };
+
   const filterResults = (airlineToFilter, airportToFilter) => {
     let filteredRoutes = Data.routes;
+    let currentAirports = airports;
+    let currentAirlines = airlines;
     if (airlineToFilter !== 'all') {
       filteredRoutes = filteredRoutes.filter(route => route.airline === airlineToFilter);
+      currentAirports = currentAirports.map(airport => {
+        const disabled = filteredRoutes.every(route => {
+          return route.src !== airport.code && route.dest !== airport.code;
+        });
+        return Object.assign({}, airport, { disabled })
+      });
     }
     if (airportToFilter !== 'all') {
       filteredRoutes = filteredRoutes.filter(route => route.src === airportToFilter || route.dest === airportToFilter);
+      currentAirlines = currentAirlines.map(airline => {
+        const disabled = filteredRoutes.every(route => {
+          return route.airline !== airline.id
+        });
+        return Object.assign({}, airline, { disabled });
+      });
     }
+    setAirlines(currentAirlines);
+    setAirports(currentAirports);
     setRoutesToShow(filteredRoutes);
     paginateRoutes(page, filteredRoutes);
   }
@@ -79,8 +105,11 @@ const App = () => {
         <RouteFilter
           handleAirlineFilter={filterAirlines}
           handleAirportFilter={filterAirports}
-          airlines={Data.airlines}
-          airports={Data.airports}
+          currentAirport={airport}
+          currentAirline={airline}
+          handleClear={clearFilters}
+          airlines={airlines}
+          airports={airports}
         />
       </section>
       <section>

@@ -1,24 +1,41 @@
 import React from 'react';
 
 const Select = ({ options, valueKey, titleKey, allTitle, value, onSelect }) => (
-  <select onChange={onSelect}>
-    <option value={value}>{allTitle}</option>
+  <select
+    onChange={onSelect}
+    value={value}
+  >
+    <option>{allTitle}</option>
     {
       options.map(option => (
-        <option key={option[valueKey]} value={option[valueKey]}>{option[titleKey]}</option>
+        <option
+          key={option[valueKey]}
+          value={option[valueKey]}
+          disabled={option.disabled}
+        >
+          {option[titleKey]}
+        </option>
       ))
     }
   </select>
 )
 
-const RouteFilter = ({ handleAirlineFilter, handleAirportFilter, airlines, airports }) => (
+const RouteFilter = ({
+    currentAirport,
+    currentAirline,
+    handleClear,
+    handleAirlineFilter,
+    handleAirportFilter,
+    airlines,
+    airports }
+  ) => (
   <div>
     <Select
       options={airlines}
       valueKey="id"
       titleKey="name"
       allTitle="All Airlines"
-      value=""
+      value={currentAirline}
       onSelect={handleAirlineFilter}
     />
     <Select
@@ -26,9 +43,10 @@ const RouteFilter = ({ handleAirlineFilter, handleAirportFilter, airlines, airpo
       valueKey="code"
       titleKey="name"
       allTitle="All Airports"
-      value=""
+      value={currentAirport}
       onSelect={handleAirportFilter}
     />
+    <button onClick={handleClear}>Show All Routes</button>
   </div>
 )
 

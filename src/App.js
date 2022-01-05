@@ -22,20 +22,36 @@ const App = () => {
   };
 
   const [page, setPage] = useState(1);
+  const [airport, setAirport] = useState('all');
+  const [airline, setAirline] = useState('all');
   const [routesToShow, setRoutesToShow] = useState(Data.routes);
   const [paginatedRoutes, setPaginatedRoutes] = useState(routesToShow.slice(0, 24));
 
   const filterAirlines = (event) => {
-    const airlineToFilter = Number(event.target.value);
-    let filteredRoutes = Data.routes;
-    if (!airlineToFilter) {
-      setRoutesToShow(filteredRoutes);
-    } else {
-      filteredRoutes = Data.routes.filter(route => route.airline === airlineToFilter);
-      setRoutesToShow(filteredRoutes);
-    }
-    paginateRoutes(page, filteredRoutes);
+    const airlineInput = Number(event.target.value);
+    const airlineToFilter = !airlineInput ? 'all' : airlineInput
+    filterResults(airlineToFilter, airport);
+    setAirline(airlineToFilter);
   };
+
+  const filterAirports = (event) => {
+    const airportInput = event.target.value;
+    const airportToFilter = !airportInput ? 'all' : airportInput
+    filterResults(airline, airportToFilter);
+    setAirport(airportToFilter);
+  };
+
+  const filterResults = (airlineToFilter, airportToFilter) => {
+    let filteredRoutes = Data.routes;
+    if (airlineToFilter !== 'all') {
+      filteredRoutes = filteredRoutes.filter(route => route.airline === airlineToFilter);
+    }
+    if (airportToFilter !== 'all') {
+      filteredRoutes = filteredRoutes.filter(route => route.src === airportToFilter || route.dest === airportToFilter);
+    }
+    setRoutesToShow(filteredRoutes);
+    paginateRoutes(page, filteredRoutes);
+  }
 
   const processPageChange = (action) => {
     let newPage = page;
@@ -61,8 +77,10 @@ const App = () => {
       </header>
       <section>
         <RouteFilter
-          handleFilter={filterAirlines}
+          handleAirlineFilter={filterAirlines}
+          handleAirportFilter={filterAirports}
           airlines={Data.airlines}
+          airports={Data.airports}
         />
       </section>
       <section>
